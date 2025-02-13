@@ -8,7 +8,7 @@
   ansible.builtin.systemd:
     daemon_reload: yes
 
-- name: restart nginx
+- name: Restart nginx
   ansible.builtin.systemd:
     name: simple-nginx
     state: restarted
