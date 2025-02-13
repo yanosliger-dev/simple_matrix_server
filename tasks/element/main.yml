@@ -1,0 +1,11 @@
+---
+- name: Element Configuration | Create Supporting Directory Structure
+  import_tasks: create_dirs.yml
+
+- name: Element Configuration | Create Configuration
+  import_tasks: create_config.yml
+
+- name: Element Configuration | Create Systemd Files
+  import_tasks: create_systemd.yml
+
+

@@ -11,11 +11,13 @@ ExecStartPre=-/usr/bin/docker stop --time=3 simple-synapse
 ExecStartPre=-/usr/bin/docker rm simple-synapse
 ExecStart=/usr/bin/docker run --name simple-synapse \
     --restart unless-stopped \
-    --user={{ synapse_uid.stdout }}:{{ synapse_gid.stdout }}: \
+    --user={{ synapse_uid.stdout }}:{{ synapse_gid.stdout }} \
+    --network matrix \
     -v {{ synapse_home }}/config:/data \
     -v {{ synapse_home }}/logs:/logs \
-    -v {{ synapse_home }}/logs:/media \
+    -v {{ synapse_home }}/medi:/media \
     -p 8008:8008 \
+    -p 8048:8048 \
     -e SYNAPSE_REPORT_STATS=yes \
     matrixdotorg/synapse:{{ synapse_version }} \
     

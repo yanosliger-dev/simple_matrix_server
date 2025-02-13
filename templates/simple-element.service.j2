@@ -1,0 +1,22 @@
+[Unit]
+Description=Element Web Chat in Docker
+After=network.target docker.service
+Requires=docker.service
+
+[Service]
+Restart=always
+User={{ synapse_user }}
+Group={{ synapse_user }}
+ExecStartPre=-/usr/bin/docker stop simple-element
+ExecStartPre=-/usr/bin/docker rm simple-element
+ExecStart=/usr/bin/docker run --name simple-element \
+    --network matrix \
+    -p 80:80 \
+    -v /opt/element/config/config.json:/app/config.json:ro \
+    vectorim/element-web:{{ element_version }}
+ExecStop=/usr/bin/docker stop simple-element
+ExecStopPost=/usr/bin/docker rm simple-element
+ExecReload=/usr/bin/docker restart simple-element
+
+[Install]
+WantedBy=multi-user.target

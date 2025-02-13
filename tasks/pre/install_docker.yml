@@ -31,3 +31,8 @@
     name: docker
     enabled: yes
     state: started
+
+- name: Ensure Docker network 'matrix' exists
+  docker_network:
+    name: matrix
+    state: present

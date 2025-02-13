@@ -1,0 +1,24 @@
+[Unit]
+Description=ntfy notification server (Docker)
+After=network.target docker.service
+Requires=docker.service
+
+[Service]
+Restart=always
+User={{ synapse_user }}
+Group={{ synapse_user }}
+ExecStartPre=-/usr/bin/docker stop --time=3 simple-ntfy
+ExecStartPre=-/usr/bin/docker rm simple-ntfy
+ExecStart=/usr/bin/docker run --name simple-ntfy \
+  --restart unless-stopped \
+  --user={{ synapse_uid.stdout }}:{{ synapse_gid.stdout }} \
+  --network matrix \
+  -v /opt/ntfy:/var/lib/ntfy \
+  -p 8080:80 \
+  binwiederhier/ntfy:{{ ntfy_version }} serve
+
+ExecStop=/usr/bin/docker stop simple-ntfy
+ExecStopPost=/usr/bin/docker rm simple-ntfy
+
+[Install]
+WantedBy=multi-user.target

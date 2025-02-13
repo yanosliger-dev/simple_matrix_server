@@ -1,0 +1,138 @@
+worker_processes auto;
+events {
+    worker_connections 1024;
+}
+
+http {
+    # Redirect HTTP to HTTPS for all subdomains
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    sendfile on;
+    keepalive_timeout 65;
+    # Main domain and matrix subdomain (Synapse) - HTTPS (443 and 8448)
+    server {
+        listen 443 ssl;
+        server_name {{ synapse_base_domain }} matrix.{{ synapse_base_domain }};
+	
+        # SSL Configuration
+        ssl_certificate /ssl/fullchain.pem;
+        ssl_certificate_key /ssl/privkey.pem;
+        ssl_trusted_certificate /ssl/chain.pem;
+
+        ssl_protocols TLSv1.2 TLSv1.3;
+        ssl_ciphers HIGH:!aNULL:!MD5;
+        ssl_prefer_server_ciphers on;
+        ssl_session_cache shared:SSL:10m;
+
+        access_log /logs/8008_access.log;
+        error_log /logs/8008_error.log;
+
+        add_header Strict-Transport-Security "max-age=15768000; includeSubDomains; preload" always;
+	
+	access_log /logs/access.log;
+        error_log /logs/error.log;
+        # Federation Discovery
+        location /.well-known/matrix/server {
+            alias /usr/share/nginx/html/.well-known/matrix/server;
+            default_type application/json;
+        }
+
+        # Client Discovery
+        location /.well-known/matrix/client {
+            return 200 '{"m.homeserver": {"base_url": "https://{{ synapse_public_name }}"}}';
+            default_type application/json;
+            add_header Access-Control-Allow-Origin *;
+        }
+
+        # Reverse Proxy to Synapse
+        location /_matrix {
+            proxy_pass http://simple-synapse:8008;
+            proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-For $remote_addr;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header Connection "";
+            proxy_http_version 1.1;
+            chunked_transfer_encoding on;
+        }
+    }
+
+    # This is used for Matrix Federation
+    # which is using default TCP port '8448'
+    server {
+        listen 8448 ssl;
+        server_name {{ synapse_base_domain }} matrix.{{ synapse_base_domain }};
+
+        # SSL Configuration
+        ssl_certificate /ssl/fullchain.pem;
+        ssl_certificate_key /ssl/privkey.pem;
+        ssl_trusted_certificate /ssl/chain.pem;
+
+        ssl_protocols TLSv1.2 TLSv1.3;
+        ssl_ciphers HIGH:!aNULL:!MD5;
+        ssl_prefer_server_ciphers on;
+        ssl_session_cache shared:SSL:10m;
+
+        access_log /logs/8448_access.log;
+        error_log /logs/8448_error.log;
+
+        add_header Strict-Transport-Security "max-age=15768000; includeSubDomains; preload" always;
+
+    location / {
+        proxy_pass http://simple-synapse:8048;
+        proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-For $remote_addr;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header Connection "";
+            proxy_http_version 1.1;
+            chunked_transfer_encoding on;
+    }
+}
+
+
+
+    # Element (Matrix Web Client) - HTTPS on 443
+    server {
+        listen 443 ssl;
+        server_name element.{{ synapse_base_domain }};
+
+        ssl_certificate /ssl/fullchain.pem;
+        ssl_certificate_key /ssl/privkey.pem;
+
+	ssl_protocols TLSv1.2 TLSv1.3;
+        ssl_ciphers HIGH:!aNULL:!MD5;
+        ssl_prefer_server_ciphers on;
+        ssl_session_cache shared:SSL:10m;
+
+        access_log /logs/element/element_access.log;
+        error_log /logs/element/element_error.log;
+
+        add_header Strict-Transport-Security "max-age=15768000; includeSubDomains; preload" always;
+
+        location / {
+            proxy_pass http://simple-element:8081;
+            proxy_set_header X-Forwarded-For $remote_addr;
+            proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header Connection "";
+            proxy_http_version 1.1;
+        }
+    }
+
+    # Ntfy (Push Notifications) - HTTPS on 443
+    server {
+        listen 443 ssl;
+        server_name ntfy.{{ synapse_base_domain }};
+
+        ssl_certificate /ssl/fullchain.pem;
+        ssl_certificate_key /ssl/privkey.pem;
+
+        location / {
+            proxy_pass http://simple-ntfy:80;
+            proxy_set_header X-Forwarded-For $remote_addr;
+            proxy_set_header Host $host;
+            proxy_buffering off;
+        }
+    }
+}
+

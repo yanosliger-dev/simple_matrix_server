@@ -14,7 +14,17 @@
 
 - name: Pull specific Synapse Docker version v1.122.0
   community.docker.docker_image:
-    name: matrixdotorg/synapse:v1.122.0
+    name: "matrixdotorg/synapse:{{ synapse_version }}"
+    source: pull
+
+- name: Pull specific ntfy Docker version
+  community.docker.docker_image:
+    name: "binwiederhier/ntfy:{{ ntfy_version }}"
+    source: pull
+
+- name: Pull specific ntfy Docker version
+  community.docker.docker_image:
+    name: "vectorim/element-web:{{ element_version }}"
     source: pull
 
 - name: Verify Docker installation

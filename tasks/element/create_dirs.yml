@@ -1,0 +1,11 @@
+---
+- name: Create directories for Element Web config
+  file:
+    path: "/opt/{{ item }}"
+    state: directory
+    owner: "{{ synapse_user }}"
+    group: "{{ synapse_user }}"
+    mode: '0755'
+  loop:
+    - element
+    - element/config

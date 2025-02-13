@@ -6,3 +6,12 @@
 
 - name: Include Synapse Tasks
   ansible.builtin.import_tasks: synapse/main.yml
+
+- name: Include NTFY Tasks
+  ansible.builtin.import_tasks: ntfy/main.yml
+
+- name: Include Element Web Tasks
+  ansible.builtin.import_tasks: element/main.yml
+
+- name: Include Nginx Tasks
+  ansible.builtin.import_tasks: nginx/main.yml

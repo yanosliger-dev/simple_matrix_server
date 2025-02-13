@@ -3,3 +3,7 @@
   ansible.builtin.systemd:
     name: synapse
     state: restarted
+
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: yes

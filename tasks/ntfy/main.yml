@@ -1,0 +1,4 @@
+---
+- name: NTFY Configuration | 
+  import_tasks: create_systemd.yml
+

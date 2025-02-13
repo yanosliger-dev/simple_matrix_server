@@ -1,0 +1,41 @@
+---
+- name: Install Certbot and NGINX SSL dependencies
+  apt:
+    name:
+      - certbot
+      - python3-certbot-nginx
+    state: present
+    update_cache: yes
+
+- name: Create Let's Encrypt directory for ACME challenges
+  file:
+    path: /var/www/letsencrypt
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0755'
+
+- name: Generate SSL certificates with Certbot for all domains
+  command: >
+    certbot certonly --webroot -w /var/www/letsencrypt
+    -d {{ synapse_base_domain }}
+    -d matrix.{{ synapse_base_domain }}
+    -d element.{{ synapse_base_domain }}
+    -d ntfy.{{ synapse_base_domain }}
+    --agree-tos --email {{ synapse_admin_email }} --noninteractive --expand
+  args:
+    creates: /etc/letsencrypt/live/{{ synapse_base_domain }}/fullchain.pem
+
+- name: Copy NGINX SSL configuration
+  template:
+    src: synapse.nginx.j2
+    dest: /opt/nginx/nginx.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Restart NGINX to apply SSL configuration
+  systemd:
+    name: simple-nginx
+    state: restarted
+

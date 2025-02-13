@@ -1,0 +1,15 @@
+---
+- name: Create systemd service file for ntfy container
+  template:
+    src: simple-ntfy.service.j2
+    dest: /etc/systemd/system/simple-ntfy.service
+    mode: '0644'
+  notify:
+    - Reload systemd
+
+- name: Start and enable ntfy container service
+  systemd:
+    name: simple-ntfy
+    enabled: yes
+    state: started
+    daemon_reload: yes

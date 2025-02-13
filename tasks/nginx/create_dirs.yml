@@ -1,0 +1,14 @@
+---
+- name: Create directories for NGINX config
+  file:
+    path: "/opt/{{ item }}"
+    state: directory
+    owner: "{{ synapse_user }}"
+    group: "{{ synapse_user }}"
+    mode: '0755'
+  loop:
+    - nginx
+    - nginx/well-known
+    - nginx/well-known/matrix
+    - nginx/ssl
+    - nginx/logs

@@ -1,0 +1,8 @@
+---
+- name: Add Certbot renewal cron job
+  cron:
+    name: "Renew Let's Encrypt certificates"
+    job: "certbot renew --quiet && systemctl restart simple-nginx"
+    minute: "0"
+    hour: "2"
+    user: root

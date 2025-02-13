@@ -1,0 +1,15 @@
+---
+- name: Create systemd service file for Element Web Chat
+  template:
+    src: simple-element.service.j2
+    dest: /etc/systemd/system/simple-element.service
+    mode: '0644'
+  notify:
+    - Reload systemd
+
+- name: Start and enable Element Web Chat service
+  systemd:
+    name: simple-element
+    enabled: yes
+    state: started
+    daemon_reload: yes
