@@ -1,0 +1,5 @@
+---
+- name: Restart Synapse
+  ansible.builtin.systemd:
+    name: synapse
+    state: restarted

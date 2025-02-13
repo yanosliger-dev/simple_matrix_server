@@ -1,0 +1,8 @@
+# tasks/main.yml
+# Main task file that includes all sub-task files.
+
+- name: Include pre-requisites tasks
+  ansible.builtin.import_tasks: pre/main.yml
+
+- name: Include Synapse Tasks
+  ansible.builtin.import_tasks: synapse/main.yml

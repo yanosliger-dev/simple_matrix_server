@@ -1,0 +1,27 @@
+[Unit]
+Description=Matrix Synapse (Docker)
+After=network.target docker.service
+Requires=docker.service
+
+[Service]
+Restart=always
+User={{ synapse_user }}
+Group={{ synapse_user }}
+ExecStartPre=-/usr/bin/docker stop --time=3 simple-synapse
+ExecStartPre=-/usr/bin/docker rm simple-synapse
+ExecStart=/usr/bin/docker run --name simple-synapse \
+    --restart unless-stopped \
+    --user={{ synapse_uid.stdout }}:{{ synapse_gid.stdout }}: \
+    -v {{ synapse_home }}/config:/data \
+    -v {{ synapse_home }}/logs:/logs \
+    -v {{ synapse_home }}/logs:/media \
+    -p 8008:8008 \
+    -e SYNAPSE_REPORT_STATS=yes \
+    matrixdotorg/synapse:{{ synapse_version }} \
+    
+
+ExecStop=/usr/bin/docker stop simple-synapse
+ExecStopPost=/usr/bin/docker rm simple-synapse
+
+[Install]
+WantedBy=multi-user.target

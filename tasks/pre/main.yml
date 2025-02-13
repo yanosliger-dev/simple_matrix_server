@@ -1,0 +1,6 @@
+---
+- name: Include Pre Tasks | Update apt and dist upgrade
+  import_tasks: update_apt.yml
+
+- name: Include Pre Tasks | Install docker and start it
+  import_tasks: install_docker.yml

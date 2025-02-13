@@ -1,0 +1,8 @@
+---
+- name: Create logging file for Synapse
+  ansible.builtin.template:
+    src: synapse_logging.j2
+    dest: "{{ synapse_home }}/config/{{ synapse_public_name }}.log.config"
+    owner: "{{ synapse_user }}"
+    group: "{{ synapse_user }}"
+    mode: "0644"

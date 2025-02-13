@@ -1,0 +1,52 @@
+
+version: 1
+
+formatters:
+    precise:
+        format: '%(asctime)s - %(name)s - %(lineno)d - %(levelname)s - %(request)s - %(message)s'
+
+filters:
+    context:
+        (): synapse.util.logcontext.LoggingContextFilter
+        request: ""
+
+handlers:
+  general_log:
+    class: logging.handlers.RotatingFileHandler
+    formatter: precise
+    filename: /logs/general.log
+    maxBytes: 104857600  # 100MB per log file
+    backupCount: 10
+    encoding: utf8
+
+  federation_log:
+    class: logging.handlers.RotatingFileHandler
+    formatter: precise
+    filename: /logs/federation.log
+    maxBytes: 104857600
+    backupCount: 10
+    encoding: utf8
+
+  media_log:
+    class: logging.handlers.RotatingFileHandler
+    formatter: precise
+    filename: /logs/media.log
+    maxBytes: 104857600
+    backupCount: 10
+    encoding: utf8
+
+loggers:
+  synapse:
+    level: INFO
+    handlers: [general_log]
+    propagate: no
+
+  synapse.federation:
+    level: INFO
+    handlers: [federation_log]
+    propagate: no
+
+  synapse.media:
+    level: INFO
+    handlers: [media_log]
+    propagate: no

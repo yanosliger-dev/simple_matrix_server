@@ -1,0 +1,9 @@
+---
+- name: Deploy Synapse configuration (homeserver.yaml)
+  ansible.builtin.template:
+    src: homeserver.yaml.j2
+    dest: "{{ synapse_home }}/config/homeserver.yaml"
+    owner: "{{ synapse_user }}"
+    group: "{{ synapse_user }}"
+    mode: "0644"
+  notify: Restart Synapse

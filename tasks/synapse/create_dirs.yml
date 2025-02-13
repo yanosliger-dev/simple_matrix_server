@@ -1,0 +1,12 @@
+---
+- name: Create necessary directories for Synapse
+  ansible.builtin.file:
+    path: "{{ synapse_home }}/{{ item }}"
+    state: directory
+    owner: "{{ synapse_user }}"
+    group: "{{ synapse_user }}"
+    mode: "0755"
+  loop:
+    - config
+    - logs
+    - media

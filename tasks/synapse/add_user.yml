@@ -1,0 +1,14 @@
+---
+- name: Add a system user for Synapse
+  ansible.builtin.user:
+    name: "{{ synapse_user }}"
+    system: yes
+    shell: /bin/bash
+    create_home: yes
+    home: "{{ synapse_home }}"
+
+- name: Ensure Synapse user is added to the Docker group
+  ansible.builtin.user:
+    name: "{{ synapse_user }}"
+    groups: docker
+    append: yes

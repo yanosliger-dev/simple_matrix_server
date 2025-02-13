@@ -1,0 +1,34 @@
+---
+
+- name: Create necessary directories for Synapse
+  ansible.builtin.file:
+    path: "{{ synapse_home }}/{{ item }}"
+    state: directory
+    owner: "{{ synapse_user }}"
+    group: "{{ synapse_user }}"
+    mode: "0755"
+  loop:
+    - config
+    - logs
+    - media
+
+- name: Pull specific Synapse Docker version v1.122.0
+  community.docker.docker_image:
+    name: matrixdotorg/synapse:v1.122.0
+    source: pull
+
+- name: Verify Docker installation
+  ansible.builtin.command: docker --version
+  register: docker_version
+  changed_when: false
+
+- ansible.builtin.debug:
+    msg: "Docker installed successfully: {{ docker_version.stdout }}"
+
+- name: Verify Docker Compose installation
+  ansible.builtin.command: docker-compose --version
+  register: compose_version
+  changed_when: false
+
+- ansible.builtin.debug:
+    msg: "Docker Compose installed successfully: {{ compose_version.stdout }}"
