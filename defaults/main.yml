@@ -12,4 +12,4 @@ synapse_docker_packages:
   - containerd.io
   - docker-compose
 
-
+synapse_passwords_enabled: false

@@ -108,8 +108,10 @@ signing_key_path: "/data/signing.key"
 
 trusted_key_servers: []
 
+
+
 password_config:
-   enabled: false
+   enabled: {% if synapse_passwords_enabled | default(false) %}true{% else %}false{% endif %}
 
 push:
   enable_push: true
