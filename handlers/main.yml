@@ -1,9 +1,14 @@
 ---
 - name: Restart Synapse
   ansible.builtin.systemd:
-    name: synapse
+    name: simple-synapse
     state: restarted
 
 - name: Reload systemd
   ansible.builtin.systemd:
     daemon_reload: yes
+
+- name: restart nginx
+  ansible.builtin.systemd:
+    name: simple-nginx
+    state: restarted
