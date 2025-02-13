@@ -11,7 +11,7 @@ ExecStartPre=-/usr/bin/docker stop simple-element
 ExecStartPre=-/usr/bin/docker rm simple-element
 ExecStart=/usr/bin/docker run --name simple-element \
     --network matrix \
-    -p 80:80 \
+    -p 8081:80 \
     -v /opt/element/config/config.json:/app/config.json:ro \
     vectorim/element-web:{{ element_version }}
 ExecStop=/usr/bin/docker stop simple-element
