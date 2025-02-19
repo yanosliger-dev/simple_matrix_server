@@ -1,0 +1,31 @@
+[Unit]
+Description=Coturn TURN Server (Docker)
+After=network.target docker.service
+Requires=docker.service
+
+[Service]
+Restart=always
+User={{ synapse_user }}
+Group={{ synapse_user }}
+ExecStartPre=-/usr/bin/docker stop --time=3 simple-coturn
+ExecStartPre=-/usr/bin/docker rm -f simple-coturn
+ExecStart=/usr/bin/docker run --rm \
+  --name simple-coturn \
+  --network matrix \
+  --user={{ synapse_uid.stdout }}:{{ synapse_gid.stdout }} \
+  -v /opt/coturn/conf/turnserver.conf:/etc/coturn/turnserver.conf \
+  -v /opt/coturn/logs:/var/log/coturn \
+  -v /opt/coturn/certs:/etc/coturn/certs:ro \
+  -p 3478:3478 \
+  -p 3478:3478/udp \
+  -p 5349:5349 \
+  -p 5349:5349/udp \
+  -p 49152-49172:49152-49172/udp \
+  instrumentisto/coturn:latest
+
+ExecStop=/usr/bin/docker stop simple-coturn
+ExecStopPost=/usr/bin/docker rm -f simple-coturn
+
+[Install]
+WantedBy=multi-user.target
+

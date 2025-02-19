@@ -1,0 +1,11 @@
+---
+- name: Copy systemd service file for CoTurn
+  template:
+    src: simple-coturn.service.j2
+    dest: /etc/systemd/system/simple-coturn.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Reload systemd
+    - Restart simple-coturn

@@ -6,13 +6,6 @@
     owner: root
     group: root
     mode: '0644'
-
-- name: Reload systemd daemon
-  systemd:
-    daemon_reload: yes
-
-- name: Enable and start simple NGINX container via systemd
-  systemd:
-    name: simple-nginx
-    state: started
-    enabled: yes
+  notify:
+    - Reload systemd
+    - Restart nginx

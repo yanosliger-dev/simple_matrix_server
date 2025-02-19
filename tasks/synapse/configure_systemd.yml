@@ -11,28 +11,16 @@
 
 - name: Create systemd service file for Synapse
   ansible.builtin.template:
-    src: synapse.service.j2
+    src: simple-synapse.service.j2
     dest: /etc/systemd/system/simple-synapse.service
     owner: root
     group: root
     mode: "0644"
-
-- name: Reload systemd to recognize Synapse service
-  ansible.builtin.systemd:
-    daemon_reload: yes
+  notify:
+    - Reload systemd
+    - Restart Synapse
 
 - name: Enable Synapse service to start on boot
   ansible.builtin.systemd:
     name: simple-synapse
     enabled: yes
-
-- name: Start Synapse service
-  ansible.builtin.systemd:
-    name: simple-synapse
-    state: started
-
-- name: Ensure Synapse service is running
-  ansible.builtin.systemd:
-    name: simple-synapse
-    state: restarted
-

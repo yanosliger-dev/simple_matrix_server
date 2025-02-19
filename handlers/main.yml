@@ -12,3 +12,8 @@
   ansible.builtin.systemd:
     name: simple-nginx
     state: restarted
+
+- name: Restart simple-coturn
+  ansible.builtin.systemd:
+    name: simple-coturn
+    state: restarted

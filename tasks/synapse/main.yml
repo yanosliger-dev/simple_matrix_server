@@ -5,6 +5,9 @@
 - name: Synapse Configuration | Create Supporting Directory Structure
   import_tasks: create_dirs.yml
 
+- name: Synapse Configuration | Copy SSL Certs
+  import_tasks: copy_ssl.yml
+
 - name: Synapse Configuration | Create Logging Support
   import_tasks: configure_logging.yml
 

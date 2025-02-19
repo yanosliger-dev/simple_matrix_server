@@ -1,0 +1,13 @@
+---
+- name: Copy ssl certs to CoTurn ssl Directory
+  copy:
+    src: "{{ inventory_dir }}/files/matrix_ssl/{{ item }}"
+    dest: "/opt/coturn/certs/{{ item }}"
+    owner: "{{ synapse_user }}"
+    group: "{{ synapse_user }}"
+    mode: '0640'
+  loop:
+    - cert.pem
+    - chain.pem
+    - fullchain.pem
+    - privkey.pem

@@ -1,0 +1,14 @@
+{
+    "m.homeserver": {
+        "base_url": "https://{{ synapse_public_name }}"
+    },
+    "m.identity_server": {
+        "base_url": "https://vector.im"
+    },
+    "m.turn": {
+        "uris": [
+            "turns:{{ synapse_public_name }}/turn?transport=tcp"
+        ],
+        "password": "{{ super_secret_turn_key }}"
+    }
+}

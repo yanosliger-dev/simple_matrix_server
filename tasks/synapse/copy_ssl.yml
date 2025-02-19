@@ -1,0 +1,13 @@
+---
+- name: Copy ssl certs to synapse ssl Directory
+  copy:
+    src: "{{ inventory_dir }}/files/matrix_ssl/{{ item }}"
+    dest: "{{ synapse_home }}/config/ssl/{{ item }}"
+    owner: "{{ synapse_user }}"
+    group: "{{ synapse_user }}"
+    mode: '0640'
+  loop:
+    - cert.pem
+    - chain.pem
+    - fullchain.pem
+    - privkey.pem

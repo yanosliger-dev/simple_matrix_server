@@ -1,0 +1,20 @@
+external-ip=192.168.1.22
+
+lt-cred-mech
+use-auth-secret
+static-auth-secret={{ super_secret_turn_key }}
+realm=matrix.techstorz.com
+
+min-port=49152
+max-port=49172
+
+total-quota=100
+stale-nonce
+no-loopback-peers
+no-multicast-peers
+
+# SSL Configuration (Use Nginx SSL)
+cert=/etc/coturn/certs/fullchain.pem
+pkey=/etc/coturn/certs/privkey.pem
+
+log-file=/var/log/turn.log

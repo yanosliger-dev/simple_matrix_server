@@ -1,0 +1,10 @@
+---
+- name: Copy Coturn configuration
+  template:
+    src: turnserver.conf.j2
+    dest: /opt/coturn/conf/turnserver.conf
+    owner: "{{ synapse_user }}"
+    group: "{{ synapse_user }}"      
+    mode: '0644'
+    force: true
+  notify: Restart simple-coturn

@@ -12,3 +12,4 @@
     - nginx/well-known/matrix
     - nginx/ssl
     - nginx/logs
+    - nginx/logs/element

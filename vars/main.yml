@@ -1,9 +1,29 @@
 ---
 synapse_user: "synapse"
 synapse_home: "/opt/synapse"
-synapse_version: "v1.122.0"
+synapse_version: "v1.105.1"
 ntfy_version: "v2.11.0"
 element_version: "v1.11.90"
+nginx_version: "1.27.4"
 
+synapse_enable_ssl: true
 synapse_ssl_cert: "/data/ssl/fullchain.pem"
 synapse_ssl_key: "/data/ssl/privkey.pem"
+super_secret_turn_key: "Shhh!ItsABl00dyS3cret!"
+
+
+# options sqlite3 which is default, postgres but must include commented postgres lines
+synapse_db_provider: "sqlite3"
+
+# example for postgres
+#synapse_db_provider: "postgres"
+#synapse_db_name: "synapse"
+#synapse_db_host: "postgresdb_host"
+#synapse_db_password: "itsmylife!"
+#synapse_db_port: "5432"
+#synapse_db_user: "synapse"
+#
+
+synapse_enable_push_notification: false
+
+synapse_passwords_enabled: true

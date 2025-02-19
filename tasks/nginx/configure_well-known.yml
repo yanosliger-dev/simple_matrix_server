@@ -1,8 +1,16 @@
 ---
-- name: Copy .well-known configuration
+- name: Copy .well-known server configuration
   template:
-    src: well-known.json.j2
+    src: well-known-server.json.j2
     dest: /opt/nginx/well-known/matrix/server
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Copy .well-known client configuration
+  template:
+    src: well-known-client.json.j2
+    dest: /opt/nginx/well-known/matrix/client
     owner: root
     group: root
     mode: '0644'

@@ -13,5 +13,8 @@
 - name: Include Element Web Tasks
   ansible.builtin.import_tasks: element/main.yml
 
+- name: Include CoTurn Tasks
+  ansible.builtin.import_tasks: coturn/main.yml
+
 - name: Include Nginx Tasks
   ansible.builtin.import_tasks: nginx/main.yml

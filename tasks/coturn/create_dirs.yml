@@ -1,0 +1,13 @@
+---
+- name: Create directories for CoTurn config
+  file:
+    path: "/opt/{{ item }}"
+    state: directory
+    owner: "{{ synapse_user }}"
+    group: "{{ synapse_user }}"
+    mode: '0755'
+  loop:
+    - coturn
+    - coturn/certs
+    - coturn/conf
+    - coturn/logs

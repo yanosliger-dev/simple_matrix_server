@@ -9,7 +9,23 @@ presence:
 
 allow_public_rooms_over_federation: false
 
-ip_range_whitelist: []
+ip_range_whitelist:
+{% if synapse_ip_whitelist is defined and synapse_ip_whitelist %}
+{% for ip in synapse_ip_whitelist %}
+  - {{ ip }}
+{% endfor %}
+{% else %}
+  []
+{% endif %}
+
+{% if synapse_domain_whitelist is defined and synapse_domain_whitelist %}
+federation_domain_whitelist:
+{% for domain in synapse_domain_whitelist %}
+  - {{ domain }}
+{% endfor %}
+{% else %}
+  []
+{% endif %}
 
 listeners:
   - port: 8008
@@ -29,8 +45,6 @@ listeners:
       - names: [federation, media]
         compress: false
 
-federation_domain_whitelist: []
-
 retention:
   enabled: true
   default_policy:
@@ -45,10 +59,26 @@ media_retention:
 
 max_upload_size: 25M
 
+{% if synapse_db_provider == 'sqlite3' %}
 database:
   name: "sqlite3"
   args:
     database: "/data/homeserver.db"
+{% endif %}
+{% if synapse_db_provider == 'postgres' %}
+database:
+  args:
+    cp_max: 10
+    cp_min: 5
+    database: {{ synapse_db_name }}
+    host: {{ synapse_db_host }}
+    password: {{ synapse_db_password }}
+    port: {{ synapse_db_port }}
+    user: {{ synapse_db_user }}
+  name: psycopg2
+  txn_limit: 0
+{% endif %}
+
 
 log_config: "/data/{{ synapse_public_name }}.log.config"
 
@@ -85,16 +115,19 @@ media_store_path: "/data/media_store"
 max_upload_size: "50M"
 
 turn_uris:
-- turns:{{ synapse_public_name }}?transport=udp
-- turns:{{ synapse_public_name }}?transport=tcp
-- turn:{{ synapse_public_name }}?transport=udp
-- turn:{{ synapse_public_name }}?transport=tcp
+  - turn:{{ synapse_turn_name }}:3478?transport=udp
+  - turn:{{ synapse_turn_name }}:3478?transport=tcp
+  - turns:{{ synapse_turn_name }}:5349?transport=tcp
 
-turn_shared_secret: {{ synapse_turn_shared_secret }}
-
+{% if super_secret_turn_key is defined and super_secret_turn_key %}
+turn_shared_secret: {{ super_secret_turn_key }}
+{% endif %}
+turn_user_lifetime: 86400
 turn_allow_guests: false
 enable_registration: false
+{% if synapse_registration_shared_secret is defined and synapse_registration_shared_secret %}
 registration_shared_secret: {{ synapse_registration_shared_secret }}
+{% endif %}
 registration_requires_token: false
 
 enable_metrics: false
@@ -102,19 +135,19 @@ enable_metrics: false
 metrics_flags:
 report_stats: true
 
-form_secret: "tocK:5AfR=MNIhi8oOWu=C.sVRv-0Wf=Q^=WIiZmSPr,Xqy-~Q"
+{% if synapse_form_secret is defined and synapse_form_secret %}
+form_secret: "{{ synapse_form_secret }}"
+{% endif %}
 
 signing_key_path: "/data/signing.key"
 
 trusted_key_servers: []
 
-
-
 password_config:
-   enabled: {% if synapse_passwords_enabled | default(false) %}true{% else %}false{% endif %}
+  enabled: {% if synapse_passwords_enabled | default(false) %}true{% else %}false{% endif %}
 
 push:
-  enable_push: true
+  enable_push: {{ synapse_enable_push_notification }}
   http:
     push_url: "http://{{ synapse_ntfy_name }}"
 
@@ -123,9 +156,7 @@ encryption_enabled_by_default_for_room_type: all
 user_directory:
     enabled: true
 
-federation_verify_certificates: true
-trusted_key_servers:
-  - server_name: "matrix.org"
-
+{% if synapse_enable_ssl %}
 tls_certificate_path: "{{ synapse_ssl_cert }}"
 tls_private_key_path: "{{ synapse_ssl_key }}"
+{% endif %}

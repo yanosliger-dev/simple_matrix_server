@@ -1,0 +1,12 @@
+---
+- name: CoTurn Configuration | Create Supporting Directory Structure
+  import_tasks: create_dirs.yml
+
+- name: CoTurn Configuration | Create turnserver.conf
+  import_tasks: configure_turnserver.yml
+
+- name: CoTurn Configuration | Copy SSL Certs for CoTurn
+  import_tasks: copy_ssl.yml
+
+- name: Synapse Configuration | Create Systemd Service
+  import_tasks: configure_systemd.yml

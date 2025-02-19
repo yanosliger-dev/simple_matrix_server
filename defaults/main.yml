@@ -11,5 +11,3 @@ synapse_docker_packages:
   - docker-ce-cli
   - containerd.io
   - docker-compose
-
-synapse_passwords_enabled: false

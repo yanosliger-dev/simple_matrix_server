@@ -22,9 +22,19 @@
     name: "binwiederhier/ntfy:{{ ntfy_version }}"
     source: pull
 
-- name: Pull specific ntfy Docker version
+- name: Pull specific element Docker version
   community.docker.docker_image:
     name: "vectorim/element-web:{{ element_version }}"
+    source: pull
+
+- name: Pull specific Nginx Docker version
+  community.docker.docker_image:
+    name: "nginx:{{ nginx_version }}"
+    source: pull
+
+- name: Pull specific CoTurn Docker version
+  community.docker.docker_image:
+    name: "instrumentisto/coturn:{{ coturn_version }}"
     source: pull
 
 - name: Verify Docker installation

@@ -1,7 +1,7 @@
 ---
 - name: Copy NGINX configuration
   template:
-    src: synapse.nginx.j2
+    src: nginx.cfg.j2
     dest: /opt/nginx/nginx.conf
     owner: root
     group: root
